@@ -15,7 +15,11 @@ const orderSchema=new mongoose.Schema({
     postalCode: { type: String, required: true },
     country: { type: String, required: true }
   },
-  paymentId: { type: String },
+  paymentMethod: { type: String, enum: ['Instant', 'Razorpay'], default: 'Instant' },
+  paymentStatus: { type: String, enum: ['Pending', 'Paid', 'Failed'], default: 'Pending' },
+  paymentId: { type: String, unique: true, sparse: true },
+  razorpayOrderId: { type: String, unique: true, sparse: true },
+  razorpaySignature: { type: String },
   status: { type: String, enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'], default: 'Pending' },
 }, { timestamps: true });
 
