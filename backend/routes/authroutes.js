@@ -1,0 +1,11 @@
+import express from "express";
+import { getUser, getMe, loginUser, registerUser, verifyOtp } from "../controllers/authcontroller.js";
+import { admin } from "../middlewares/adminmiddleware.js";
+import { protect } from "../middlewares/authmiddleware.js";
+const router = express.Router();
+router.post("/register", registerUser);
+router.post("/login", loginUser);
+router.get("/me", protect, getMe);
+router.get("/users", protect, admin, getUser);
+router.post("/verify-otp", verifyOtp);
+export default router;
