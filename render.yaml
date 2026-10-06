@@ -11,8 +11,8 @@ services:
     buildCommand: npm run install-all && npm --prefix frontend run build
     # backend/package.json -> node index.js (PORT is provided by Render)
     startCommand: npm start
-    # GET / answers 200 once the API is up
-    healthCheckPath: /
+    # GET /api/health answers 200 once the API is up (independent of the SPA)
+    healthCheckPath: /api/health
     autoDeployTrigger: commit
     envVars:
       # Node version (also declared in package.json engines)
