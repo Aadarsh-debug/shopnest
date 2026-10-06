@@ -1,0 +1,45 @@
+# Render Blueprint: builds the React frontend and runs the Express API,
+# which also serves the built frontend (single service, same origin, no CORS issues).
+services:
+  - type: web
+    name: shopnest
+    runtime: node
+    plan: free
+    # Must match the existing 'shopnest' service region (Render can't change it later)
+    region: ohio
+    # Installs root/backend/frontend deps, then produces frontend/build
+    buildCommand: npm run install-all && npm --prefix frontend run build
+    # backend/package.json -> node index.js (PORT is provided by Render)
+    startCommand: npm start
+    # GET / answers 200 once the API is up
+    healthCheckPath: /
+    autoDeployTrigger: commit
+    envVars:
+      # Node version (also declared in package.json engines)
+      - key: NODE_VERSION
+        value: "24.x"
+      # The CRA build has lint warnings; CI=true would turn them into build errors
+      # and fail the deploy. Keep them as warnings only.
+      - key: CI
+        value: "false"
+      # Secret used to sign JWTs; Render generates a random value
+      - key: SECRET_KEY
+        generateValue: true
+      # Required: MongoDB connection string (MongoDB Atlas)
+      - key: MONGO_URI
+        sync: false
+      # Optional integrations - leave empty to disable the feature
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASS
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false

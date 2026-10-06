@@ -11,6 +11,9 @@ build/
 dist/
 coverage/
 
+# Runtime upload scratch space (multer)
+backend/uploads/
+
 # Logs
 *.log
 npm-debug.log*

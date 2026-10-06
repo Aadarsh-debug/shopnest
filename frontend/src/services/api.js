@@ -1,4 +1,9 @@
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+// Same-origin API by default in production builds (the backend serves the frontend
+// on Render), localhost during development. Override with REACT_APP_API_URL when the
+// API is hosted elsewhere.
+const API_URL =
+  process.env.REACT_APP_API_URL ||
+  (process.env.NODE_ENV === "production" ? "/api" : "http://localhost:5000/api");
 
 // 24 Curated Fallback Products for resilient offline / demo testing
 export const INITIAL_PRODUCTS = [
