@@ -17,7 +17,8 @@ const app=express();
 app.use(express.json({ limit: "1mb" }));
 app.use(cors());
 
-app.get("/",(req,res)=>{
+// Health endpoint for Render's healthCheckPath (independent of static assets)
+app.get("/api/health",(req,res)=>{
   res.send("server running properly")
 })
 app.use("/api/auth",authroutes);
@@ -38,12 +39,17 @@ const indexHtml = path.join(frontendBuild, "index.html");
 
 if (fs.existsSync(indexHtml)) {
   app.use(express.static(frontendBuild));
-  // SPA fallback: every other GET returns the React index.html
+  // SPA fallback: every other GET (including /) returns the React index.html
   app.use((req, res, next) => {
     if (req.method === "GET" && req.accepts("html")) {
       return res.sendFile(indexHtml);
     }
     next();
+  });
+} else {
+  // Local development without a production build: plain-text root response
+  app.get("/", (req, res) => {
+    res.send("server running properly");
   });
 }
 
