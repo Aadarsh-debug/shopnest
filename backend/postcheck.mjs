@@ -62,8 +62,11 @@ function multipart(fields, file) {
 
 async function main() {
   // 1. Server + SPA shell -------------------------------------------------
+  const health = await call("GET", "/api/health");
+  check("GET /api/health answers", health.status === 200 && String(health.data).includes("server running"), `status=${health.status}`);
+
   const root = await call("GET", "/");
-  check("GET / is up", root.status === 200 && String(root.data).includes("server running"), `status=${root.status}`);
+  check("GET / serves the storefront", root.status === 200 && String(root.data).includes("<div id=\"root\">"), `status=${root.status}`);
 
   const spa = await call("GET", "/products");
   check("GET /products returns SPA html", spa.status === 200 && String(spa.data).includes("<div id=\"root\">"), `status=${spa.status}`);
